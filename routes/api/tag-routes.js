@@ -10,16 +10,6 @@ router.get('/', async (req, res) => {
     // find all tags
     const tagData = await Tag.findAll({
       include: [{model: Product}, {model: ProductTag}],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              ''
-            ),
-            '',
-          ],
-        ],
-      },
     });
     res.status(200).json(tagData);
   } catch (err) {
@@ -35,16 +25,7 @@ router.get('/:id', async (req, res) => {
     // find a single tag by its `id`
     const tagData = await Tag.findByPk(req.params.id, {
       include: [{model: Product}, {model: ProductTag}],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              ''
-            ),
-            '',
-          ],
-        ],
-      },
+      
     });
 
     if (!tagData) {

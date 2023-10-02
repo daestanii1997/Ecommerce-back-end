@@ -9,16 +9,7 @@ router.get('/', async (req, res) => {
   try {
     const productData = await Tag.findAll({
       include: [{model: Product}, {model: ProductTag}, {model: Category}],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              ''
-            ),
-            '',
-          ],
-        ],
-      },
+
     });
     res.status(200).json(productData);
   } catch (err) {
@@ -33,16 +24,7 @@ router.get('/:id', async (req, res) => {
   try {
     const productData = await Tag.findByPk(req.params.id, {
       include: [{model: Product}, {model: ProductTag}, {model: Category}],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              ''
-            ),
-            '',
-          ],
-        ],
-      },
+     
     });
 
     if (!productData) {
