@@ -48,7 +48,47 @@ router.post('/', async (req, res) => {
 
 // UPDATE CATEGORY ROUTE
 router.put('/:id', async (req, res) => {
-  // update a category by its `id` value
+
+  Category.update(req.body, {
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((product) => {
+      if (req.body.tagIds && req.body.tagIds.length) {
+        
+        Product.findAll({
+          where: { product_id: req.params.id }
+        }).then((productTags) => {
+
+          const productTagIds = productTags.map(({ tag_id }) => tag_id);
+          const newProductTags = req.body.tagIds
+          .filter((tag_id) => !productTagIds.includes(tag_id))
+          .map((tag_id) => {
+            return {
+              product_id: req.params.id,
+              tag_id,
+            };
+          });
+
+          const productTagsToRemove = productTags
+          .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
+          .map(({ id }) => id);
+
+          return Promise.all([
+            Product.destroy({ where: { id: productTagsToRemove } }),
+            Product.bulkCreate(newProductTags),
+          ]);
+        });
+      }
+
+      return res.json(product);
+
+    })
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 // DELETE CATEGORY ROUTE
