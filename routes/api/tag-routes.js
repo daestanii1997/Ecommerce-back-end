@@ -5,27 +5,24 @@ const { Tag, Product, ProductTag } = require('../../models');
 // The `/api/tags` endpoint
 
 // GET ALL TAGS ROUTE
+// Its aliveeeeee
 router.get('/', async (req, res) => {
   try {
-    // find all tags
     const tagData = await Tag.findAll({
-      include: [{model: Product}, {model: ProductTag}],
+      include: [{model: Product}],
     });
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
   }
-  
-  // be sure to include its associated Product data
 });
 
 // FIND TAG BY ID ROUTE
+// This works!!
 router.get('/:id', async (req, res) => {
   try {
-    // find a single tag by its `id`
     const tagData = await Tag.findByPk(req.params.id, {
-      include: [{model: Product}, {model: ProductTag}],
-      
+      include: [{model: Product}],
     });
 
     if (!tagData) {
@@ -36,14 +33,15 @@ router.get('/:id', async (req, res) => {
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
+    console.log(err)
   }
   // be sure to include its associated Product data
 });
 
 // NEW TAG ROUTE
+// Works ish lol
 router.post('/', async (req, res) => {
   try {
-    // create a new tag
     const tagData = await Tag.create(req.body);
     res.status(200).json(tagData);
   } catch (err) {
@@ -105,10 +103,9 @@ router.put('/:id', (req, res) => {
 });
 
 // TAG DELETE ROUTE
-
+// This works :)
 router.delete('/:id', async (req, res) => {
   try {
-    // delete on tag by its `id` value
     const tagData = await Tag.destroy({
       where: {
         id: req.params.id,

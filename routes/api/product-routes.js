@@ -1,30 +1,31 @@
+// The `/api/products` endpoint
+
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
-// The `/api/products` endpoint
-
 // GET ALL PRODUCTS ROUTE
+// This works!!!
 router.get('/', async (req, res) => {
-  // find all products
   try {
-    const productData = await Tag.findAll({
-      include: [{model: Product}, {model: ProductTag}, {model: Category}],
-
+    const productData = await Product.findAll({
+      include: {
+        all: true
+      },
     });
     res.status(200).json(productData);
   } catch (err) {
     res.status(500).json(err);
   }
-  // be sure to include its associated Category and Tag data
 });
 
 // FIND PRODUCT BY ID
+// This works!!!
 router.get('/:id', async (req, res) => {
-  // find a single product by its `id`
   try {
-    const productData = await Tag.findByPk(req.params.id, {
-      include: [{model: Product}, {model: ProductTag}, {model: Category}],
-     
+    const productData = await Product.findByPk(req.params.id, {
+      include: {
+        all: true
+      },
     });
 
     if (!productData) {
@@ -36,31 +37,28 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-  // be sure to include its associated Category and Tag data
 });
 
 // NEW PRODUCT ROUTE
-router.post('/', async (req, res) => {
-
+// Route works!! Tags aren't applying though
+router.post('/', (req, res) => {
 
   /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
+{
+	"product_name": "Blue Basketball",
+  "price": 200.99,
+  "stock": 3,
+  "category_id": 2,
+	"tags": [3]
+}
   */
-
 
   Product.create(req.body)
     .then((product) => {
 
-
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       
-      
-      if (req.body.tagIds.length) {
+      if (req.body.tagIds) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
             product_id: product.id,
@@ -70,9 +68,7 @@ router.post('/', async (req, res) => {
         return ProductTag.bulkCreate(productTagIdArr);
       }
 
-
       // if no product tags, just respond
-
 
       res.status(200).json(product);
     })
@@ -138,8 +134,8 @@ router.put('/:id', (req, res) => {
 
 
 // PRODUCT DELETE ROUTE
+// This works!!!
 router.delete('/:id', async (req, res) => {
-
   try {
     const productData = await Product.destroy({
       where: {
@@ -155,7 +151,6 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-
 });
 
 module.exports = router;
