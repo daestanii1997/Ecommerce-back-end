@@ -25,6 +25,11 @@ The required package installations are:
   `DB_PW=''`
 
 ## Usage
+
+https://drive.google.com/file/d/16jNrqFO_ASfeBBFUSnSrXUDsMHrAqnJd/view
+
+https://github.com/daestanii1997/Ecommerce-back-end
+
 When using insomnia you are able to use GET, PUT, POST, and DELETE requests  on the following routes:
 `/api/tags`
 `/api/categories`
